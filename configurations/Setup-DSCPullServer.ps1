@@ -40,9 +40,9 @@
             Ensure = "Present"
             }
 
-        $SourcePath = "$($pshome)\modules\psdesiredstateconfiguration\pullserver"
-        $DestinationPath = "C:\inetpub\wwwroot\PSDSCPullServer"
-        $AppPool = "DSCAppPool"
+        $Global:SourcePath = "$($pshome)\modules\psdesiredstateconfiguration\pullserver"
+        $Global:DestinationPath = "C:\inetpub\wwwroot\PSDSCPullServer"
+        $Global:AppPool = "DSCAppPool"
                 
         script SetupDirectory
         {
@@ -51,20 +51,20 @@
                 # Get the directory
                 #
                 Return @{
-                    Result = (Get-Item $DestinationPath)
+                    Result = (Get-Item $Global:DestinationPath)
                     }
                 }
             TestScript = {
                 #
                 # Return $true or $false if the directory is there
                 #
-                Return (Test-Path -Path $DestinationPath)
+                Return (Test-Path -Path $Global:DestinationPath)
                 }
             SetScript = {
                 #
                 # Create the iis directory
                 #
-                New-Item "$($DestinationPath)\bin" -ItemType directory -Force
+                New-Item "$($Global:DestinationPath)\bin" -ItemType directory -Force
                 }
             DependsOn = "[WindowsFeature]DSCService"
             }
@@ -75,15 +75,15 @@
                 # Get the files
                 #
                 Return @{
-                    Result = (Get-ChildItem -Path $DestinationPath -Filter "psdscpullserver.*" `
+                    Result = (Get-ChildItem -Path $Global:DestinationPath -Filter "psdscpullserver.*" `
                                 |Select-Object -Property FullName)
                     }
                 }
             TestScript = {
                 #
-                # Return $true or $false if the pullfiles exist in $SourcePath
+                # Return $true or $false if the pullfiles exist in $Global:SourcePath
                 #
-                $PullFiles = Get-ChildItem -Path $SourcePath -Filter "psdscpullserver.*"
+                $PullFiles = Get-ChildItem -Path $Global:SourcePath -Filter "psdscpullserver.*"
                 if ($PullFiles)
                 {
                     Return $true
@@ -95,9 +95,9 @@
                 }
             SetScript = {
                 #
-                # Copy pullfiles to $DestinationPath
+                # Copy pullfiles to $Global:DestinationPath
                 #
-                Copy-Item "$($SourcePath)\psdscpullserver.*" $DestinationPath
+                Copy-Item "$($Global:SourcePath)\psdscpullserver.*" $Global:DestinationPath
                 }
             DependsOn = "[script]SetupDirectory"
             }
@@ -108,20 +108,20 @@
                 # Get the ApplicationFile
                 #
                 Return @{
-                    Result = (Get-Item "$($DestinationPath)\Global.asax")
+                    Result = (Get-Item "$($Global:DestinationPath)\Global.asax")
                     }
                 }
             TestScript = {
                 #
                 # Return $true or $false if the ApplicationFile is found
                 #
-                Return (Test-Path -Path "$($SourcePath)\Global.asax")
+                Return (Test-Path -Path "$($Global:SourcePath)\Global.asax")
                 }
             SetScript = {
                 #
-                # Copy the ApplicationFile to the $DestinationPath
+                # Copy the ApplicationFile to the $Global:DestinationPath
                 #
-                Copy-Item "$($SourcePath)\Global.asax" $DestinationPath
+                Copy-Item "$($Global:SourcePath)\Global.asax" $Global:DestinationPath
                 }
             DependsOn = "[script]CopyPullServerFiles"
             }
@@ -132,20 +132,20 @@
                 # Get the DLL file
                 #
                 Return = @{
-                    Result = (Get-Item "$($DestinationPath)\bin\Microsoft.Powershell.DesiredStateConfiguration.Service.dll")
+                    Result = (Get-Item "$($Global:DestinationPath)\bin\Microsoft.Powershell.DesiredStateConfiguration.Service.dll")
                     }
                 }
             TestScript = {
                 #
                 # Return $true or $false if the DLL is there
                 #
-                Return (Test-Path -Path "$($SourcePath)\Microsoft.Powershell.DesiredStateConfiguration.Service.dll")
+                Return (Test-Path -Path "$($Global:SourcePath)\Microsoft.Powershell.DesiredStateConfiguration.Service.dll")
                 }
             SetScript = {
                 #
                 # Copy the DLL file
                 #
-                Copy-Item "$($SourcePath)\Microsoft.Powershell.DesiredStateConfiguration.Service.dll" "$($DestinationPath)\bin"
+                Copy-Item "$($Global:SourcePath)\Microsoft.Powershell.DesiredStateConfiguration.Service.dll" "$($Global:DestinationPath)\bin"
                 }
             DependsOn = "[script]SetupDirectory"
             }
@@ -156,20 +156,20 @@
                 # Get the WebConfig file
                 #
                 Return = @{
-                    Result = (Get-Item "$($DestinationPath)\web.config")
+                    Result = (Get-Item "$($Global:DestinationPath)\web.config")
                     }
                 }
             TestScript = {
                 #
                 # Return $true or $false if the default file exists
                 #
-                Return (Test-Path -Path "$($DestinationPath)\psdscpullserver.config")
+                Return (Test-Path -Path "$($Global:DestinationPath)\psdscpullserver.config")
                 }
             SetScript = {
                 #
                 # Create the WebConfig file by renaming the default one
                 #
-                Rename-Item "$($DestinationPath)\psdscpullserver.config" "$($DestinationPath)\web.config"
+                Rename-Item "$($Global:DestinationPath)\psdscpullserver.config" "$($Global:DestinationPath)\web.config"
                 }
             DependsOn = "[script]CopyPullServerFiles"
             }
@@ -187,13 +187,13 @@
                 #
                 # Return $true or $false if the DevicesDatabase exists
                 #
-                Return (Test-Path -Path "$($SourcePath)\Devices.mdb")
+                Return (Test-Path -Path "$($Global:SourcePath)\Devices.mdb")
                 }
             SetScript = {
                 #
                 # Copy the DevicesDatabase to the default location
                 #
-                Copy-Item "$($SourcePath)\Devices.mdb" "$($env:programfiles)\WindowsPowerShell\DscService"
+                Copy-Item "$($Global:SourcePath)\Devices.mdb" "$($env:programfiles)\WindowsPowerShell\DscService"
                 }
             DependsOn = "[WindowsFeature]DSCService"
             }
@@ -224,8 +224,8 @@
                 #
                 # Create the WebSite
                 #
-                New-WebAppPool -Name $AppPool
-                New-Website -Name "DSC-Service" -Port $Port -PhysicalPath $DestinationPath -ApplicationPool $AppPool
+                New-WebAppPool -Name $Global:AppPool
+                New-Website -Name "DSC-Service" -Port $Port -PhysicalPath $Global:DestinationPath -ApplicationPool $Global:AppPool
                 }
             DependsOn = "[WindowsFeature]WebServerRole"
             }
