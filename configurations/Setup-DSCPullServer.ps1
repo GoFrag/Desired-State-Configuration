@@ -4,7 +4,7 @@
     (
     [Parameter(Mandatory=$true)]
     [ValidateNotNullOrEmpty()]
-    [string]$ComputerName,
+    [string]$ComputerName
     )
 
     $SourcePath = "$($pshome)\modules\psdesiredstateconfiguration\pullserver"
@@ -79,7 +79,7 @@
                 #
                 # Return $true or $false if the pullfiles exist in "$($pshome)\modules\psdesiredstateconfiguration\pullserver"
                 #
-                $PullFiles = Get-ChildItem -Path "$($pshome)\modules\psdesiredstateconfiguration\pullserver" -Filter "psdscpullserver.*"
+                $PullFiles = Get-ChildItem -Path "C:\Windows\System32\WindowsPowerShell\v1.0\modules\psdesiredstateconfiguration\pullserver" -Filter "psdscpullserver.*"
                 if ($PullFiles)
                 {
                     Return $true
@@ -93,7 +93,7 @@
                 #
                 # Copy pullfiles to "C:\inetpub\wwwroot\PSDSCPullServer"
                 #
-                Copy-Item "$($pshome)\modules\psdesiredstateconfiguration\pullserver\psdscpullserver.*" "C:\inetpub\wwwroot\PSDSCPullServer"
+                Copy-Item "C:\Windows\System32\WindowsPowerShell\v1.0\modules\psdesiredstateconfiguration\pullserver\psdscpullserver.*" "C:\inetpub\wwwroot\PSDSCPullServer"
                 }
             DependsOn = "[script]SetupDirectory"
             }
@@ -111,13 +111,13 @@
                 #
                 # Return $true or $false if the ApplicationFile is found
                 #
-                Return (Test-Path -Path "$($pshome)\modules\psdesiredstateconfiguration\pullserver\Global.asax")
+                Return (Test-Path -Path "C:\Windows\System32\WindowsPowerShell\v1.0\modules\psdesiredstateconfiguration\pullserver\Global.asax")
                 }
             SetScript = {
                 #
                 # Copy the ApplicationFile to the "C:\inetpub\wwwroot\PSDSCPullServer"
                 #
-                Copy-Item "$($pshome)\modules\psdesiredstateconfiguration\pullserver\Global.asax" "C:\inetpub\wwwroot\PSDSCPullServer"
+                Copy-Item "C:\Windows\System32\WindowsPowerShell\v1.0\modules\psdesiredstateconfiguration\pullserver\Global.asax" "C:\inetpub\wwwroot\PSDSCPullServer"
                 }
             DependsOn = "[script]CopyPullServerFiles"
             }
@@ -135,13 +135,13 @@
                 #
                 # Return $true or $false if the DLL is there
                 #
-                Return (Test-Path -Path "$($pshome)\modules\psdesiredstateconfiguration\pullserver\Microsoft.Powershell.DesiredStateConfiguration.Service.dll")
+                Return (Test-Path -Path "C:\Windows\System32\WindowsPowerShell\v1.0\modules\psdesiredstateconfiguration\pullserver\Microsoft.Powershell.DesiredStateConfiguration.Service.dll")
                 }
             SetScript = {
                 #
                 # Copy the DLL file
                 #
-                Copy-Item "$($pshome)\modules\psdesiredstateconfiguration\pullserver\Microsoft.Powershell.DesiredStateConfiguration.Service.dll" "C:\inetpub\wwwroot\PSDSCPullServer\bin"
+                Copy-Item "C:\Windows\System32\WindowsPowerShell\v1.0\modules\psdesiredstateconfiguration\pullserver\Microsoft.Powershell.DesiredStateConfiguration.Service.dll" "C:\inetpub\wwwroot\PSDSCPullServer\bin"
                 }
             DependsOn = "[script]SetupDirectory"
             }
@@ -176,20 +176,20 @@
                 # Get the DevicesDatabase
                 #
                 Return = @{
-                    Result = (Get-Item "$($env:programfiles)\WindowsPowerShell\DscService\Devices.mdb")
+                    Result = (Get-Item "C:\Program Files\WindowsPowerShell\DscService\Devices.mdb")
                     }
                 }
             TestScript = {
                 #
                 # Return $true or $false if the DevicesDatabase exists
                 #
-                Return (Test-Path -Path "$($pshome)\modules\psdesiredstateconfiguration\pullserver\Devices.mdb")
+                Return (Test-Path -Path "C:\Windows\System32\WindowsPowerShell\v1.0\modules\psdesiredstateconfiguration\pullserver\Devices.mdb")
                 }
             SetScript = {
                 #
                 # Copy the DevicesDatabase to the default location
                 #
-                Copy-Item "$($pshome)\modules\psdesiredstateconfiguration\pullserver\Devices.mdb" "$($env:programfiles)\WindowsPowerShell\DscService"
+                Copy-Item "C:\Windows\System32\WindowsPowerShell\v1.0\modules\psdesiredstateconfiguration\pullserver\Devices.mdb" "C:\Program Files\WindowsPowerShell\DscService"
                 }
             DependsOn = "[WindowsFeature]DSCService"
             }
