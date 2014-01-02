@@ -70,6 +70,11 @@ Process
             {
                 Write-Output "        WindowsFeature $($Feature.Name.Replace('-',''))"
                 Write-Output "        {"
+                Write-Output "            <#"
+                Write-Output "                Description"
+                Write-Output "                -----------"
+                Write-Output "                $($Feature.Description)"
+                Write-Output "            #>"
                 Write-Output "            Name = `"$($Feature.Name)`""
                 Write-Output "            Ensure = `"Present`""
                 Write-Output "            }"
@@ -79,6 +84,11 @@ Process
             {
                 Write-Output "        WindowsFeature $($Feature.Name.Replace('-',''))"
                 Write-Output "        {"
+                Write-Output "            <#"
+                Write-Output "                Description"
+                Write-Output "                -----------"
+                Write-Output "                $($Feature.Description)"
+                Write-Output "            #>"
                 Write-Output "            Name = `"$($Feature.Name)`""
                 Write-Output "            Ensure = `"Absent`""
                 Write-Output "            }"
