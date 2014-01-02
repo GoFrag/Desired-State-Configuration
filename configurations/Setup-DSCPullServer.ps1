@@ -4,7 +4,8 @@
     (
     [Parameter(Mandatory=$true)]
     [ValidateNotNullOrEmpty()]
-    [string]$ComputerName
+    [string]$ComputerName,
+    $DestinationPath = "C:\inetpub\wwwroot\PSDSCPullServer"
     )
 
     $SourcePath = "$($pshome)\modules\psdesiredstateconfiguration\pullserver"
@@ -69,7 +70,7 @@
             Ensure = "Present"
             Type = "File"
             SourcePath = "C:\Windows\System32\WindowsPowerShell\v1.0\modules\psdesiredstateconfiguration\pullserver\psdscpullserver.mof"
-            DestinationPath = "C:\inetpub\wwwroot\PSDSCPullServer"
+            DestinationPath = $DestinationPath
             DependsOn = "[WindowsFeature]DSCService"
             }
         File CopyPullServerSVC
@@ -77,7 +78,7 @@
             Ensure = "Present"
             Type = "File"
             SourcePath = "C:\Windows\System32\WindowsPowerShell\v1.0\modules\psdesiredstateconfiguration\pullserver\psdscpullserver.svc"
-            DestinationPath = "C:\inetpub\wwwroot\PSDSCPullServer"
+            DestinationPath = $DestinationPath
             DependsOn = "[WindowsFeature]DSCService"
             }
         File CopyPullServerXML
@@ -85,7 +86,7 @@
             Ensure = "Present"
             Type = "File"
             SourcePath = "C:\Windows\System32\WindowsPowerShell\v1.0\modules\psdesiredstateconfiguration\pullserver\psdscpullserver.xml"
-            DestinationPath = "C:\inetpub\wwwroot\PSDSCPullServer"
+            DestinationPath = $DestinationPath
             DependsOn = "[WindowsFeature]DSCService"
             }
         File CopyPullServerApplicationFile
@@ -93,7 +94,7 @@
             Ensure = "Present"
             Type = "File"
             SourcePath = "C:\Windows\System32\WindowsPowerShell\v1.0\modules\psdesiredstateconfiguration\pullserver\Global.asax"
-            DestinationPath = "C:\inetpub\wwwroot\PSDSCPullServer"
+            DestinationPath = $DestinationPath
             DependsOn = "[script]SetupDirectory"
             }
         File CopyDSCServiceDLL
