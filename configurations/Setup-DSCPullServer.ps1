@@ -5,9 +5,6 @@
     [Parameter(Mandatory=$true)]
     [ValidateNotNullOrEmpty()]
     [string]$ComputerName,
-    [Parameter(Mandatory=$true)]
-    [ValidateNotNullOrEmpty()]
-    [Int]$Port
     )
 
     $SourcePath = "$($pshome)\modules\psdesiredstateconfiguration\pullserver"
@@ -224,7 +221,7 @@
                 # Create the WebSite
                 #
                 New-WebAppPool -Name "DSCAppPool"
-                New-Website -Name "DSC-Service" -Port $Port -PhysicalPath "C:\inetpub\wwwroot\PSDSCPullServer" -ApplicationPool "DSCAppPool"
+                New-Website -Name "DSC-Service" -Port 8080 -PhysicalPath "C:\inetpub\wwwroot\PSDSCPullServer" -ApplicationPool "DSCAppPool"
                 }
             DependsOn = "[WindowsFeature]WebServerRole"
             }
